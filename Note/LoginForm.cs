@@ -28,15 +28,7 @@ namespace Note
             await sqlConnection.OpenAsync();
         }
 
-        private void LoginForm_FormClosing(object sender, FormClosedEventArgs e)
-        {
-            if (!login)
-            {
-            Application.Exit();
-            }
-            sqlConnection.Close();          
-        }
-
+       
         private async void button1_Click(object sender, EventArgs e) // REGISTRATION
         {
             if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrWhiteSpace(textBox1.Text) &&
@@ -109,6 +101,15 @@ namespace Note
                 MessageBox.Show("Неправильно заполнены поля", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private void LoginForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!login)
+            {
+                Application.Exit();
+            }
+            sqlConnection.Close();
         }
     }
 
