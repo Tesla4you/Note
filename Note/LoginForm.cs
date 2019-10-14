@@ -45,17 +45,17 @@ namespace Note
             if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrWhiteSpace(textBox1.Text) &&
                     !string.IsNullOrEmpty(textBox2.Text) && !string.IsNullOrWhiteSpace(textBox2.Text))
             {
-                SqlCommand command1 = new SqlCommand("SELECT  [Name] FROM [User] WHERE Name LIKE @Name", sqlConnection);
+                SqlCommand command1 = new SqlCommand("SELECT  [UserName] FROM [LogUsers] WHERE UserName LIKE @UserName", sqlConnection);
 
-                command1.Parameters.AddWithValue("Name", textBox1.Text.ToLowerInvariant());
+                command1.Parameters.AddWithValue("UserName", textBox1.Text.ToLowerInvariant());
 
                 SqlDataReader sqlDataReader = command1.ExecuteReader();
 
                 if (!sqlDataReader.HasRows)
                 {
-                    SqlCommand command = new SqlCommand("INSERT INTO [User] (Name, Password) VALUES(@Name, @Password)", sqlConnection);
+                    SqlCommand command = new SqlCommand("INSERT INTO [LogUsers] (UserName, Password) VALUES(@UserName, @Password)", sqlConnection);
 
-                    command.Parameters.AddWithValue("Name", textBox1.Text.ToLowerInvariant());
+                    command.Parameters.AddWithValue("UserName", textBox1.Text.ToLowerInvariant());
 
                     command.Parameters.AddWithValue("Password", textBox2.Text);
 
@@ -81,8 +81,38 @@ namespace Note
         }
         private void button2_Click(object sender, EventArgs e) // LOGON
         {
-            
-        }
+            if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrWhiteSpace(textBox1.Text) && !string.IsNullOrEmpty(textBox2.Text) && !string.IsNullOrWhiteSpace(textBox2.Text))
+            {
+                SqlCommand command3 = new SqlCommand("SELECT  [UserName],[Password],[Id] FROM [LogUsers] WHERE UserName LIKE @UserName", sqlConnection);
 
+                command3.Parameters.AddWithValue("UserName", textBox1.Text.ToLowerInvariant());
+
+                SqlDataReader sqlDataReader34 = command3.ExecuteReader();
+
+                // UserId = Convert.ToInt32(sqlDataReader34["Id"]);
+                if (!sqlDataReader34.HasRows) MessageBox.Show("Неверный Пользователь", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                if (Convert.ToString(sqlDataReader34["Password"]) == textBox2.Text)
+                {
+                    sqlDataReader34.Close();
+                    //  MessageBox.Show("Добро Пожаловать " + textBox1.Text + " ", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    login = true;
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Неверный пароль", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    sqlDataReader34.Close();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Неправильно заполнены поля", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
     }
+
 }
+
