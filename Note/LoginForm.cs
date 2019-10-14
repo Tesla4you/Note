@@ -28,7 +28,7 @@ namespace Note
             await sqlConnection.OpenAsync();
         }
 
-        private void LoginForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void LoginForm_FormClosing(object sender, FormClosedEventArgs e)
         {
             if (!login)
             {
