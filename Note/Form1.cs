@@ -23,6 +23,7 @@ namespace Note
         {
             LoginForm loginForm = new LoginForm();
             loginForm.ShowDialog();
+            
         }
     }
 }

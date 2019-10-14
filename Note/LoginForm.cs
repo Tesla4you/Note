@@ -16,16 +16,16 @@ namespace Note
         SqlConnection sqlConnection;
         bool login = false;
 
-        public LoginForm()
+        public  LoginForm()
         {
             InitializeComponent();
             string connectionstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\source\repos\Note\Note\DatabaseNote.mdf;Integrated Security=True";
             sqlConnection = new SqlConnection(connectionstring);
         }        
 
-        private void LoginForm_Load(object sender, EventArgs e)
+        private async void LoginForm_Load(object sender, EventArgs e)
         {
-            
+            await sqlConnection.OpenAsync();
         }
 
         private void LoginForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -34,10 +34,7 @@ namespace Note
             {
             Application.Exit();
             }
-            if (sqlConnection != null && sqlConnection.State != ConnectionState.Closed)
-            {
-                sqlConnection.Close();
-            }
+            sqlConnection.Close();          
         }
 
         private async void button1_Click(object sender, EventArgs e) // REGISTRATION
@@ -91,19 +88,20 @@ namespace Note
 
                 // UserId = Convert.ToInt32(sqlDataReader34["Id"]);
                 if (!sqlDataReader34.HasRows) MessageBox.Show("Неверный Пользователь", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                if (Convert.ToString(sqlDataReader34["Password"]) == textBox2.Text)
+                if (sqlDataReader34.Read())
                 {
-                    sqlDataReader34.Close();
-                    //  MessageBox.Show("Добро Пожаловать " + textBox1.Text + " ", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    login = true;
-                    this.Close();
-                }
-                else
-                {
-                    MessageBox.Show("Неверный пароль", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (Convert.ToString(sqlDataReader34["Password"]) == textBox2.Text)
+                    {
+                        sqlDataReader34.Close();
+                        login = true;
+                        Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Неверный пароль", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    sqlDataReader34.Close();
+                        sqlDataReader34.Close();
+                    }
                 }
             }
             else
