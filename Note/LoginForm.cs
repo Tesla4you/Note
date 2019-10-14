@@ -19,7 +19,7 @@ namespace Note
         public  LoginForm()
         {
             InitializeComponent();
-            string connectionstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\source\repos\Note\Note\DatabaseNote.mdf;Integrated Security=True";
+            string connectionstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\source\repos\Note\DatabaseNote.mdf;Integrated Security=True";
             sqlConnection = new SqlConnection(connectionstring);
         }        
 
