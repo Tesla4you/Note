@@ -15,6 +15,9 @@ namespace Note
     {
         SqlConnection sqlConnection;
         bool login = false;
+        public int UserId;
+        public string UserName;
+
 
         public  LoginForm()
         {
@@ -60,8 +63,7 @@ namespace Note
                 }
                 else
                 {
-                    MessageBox.Show("Такой пользователь уже есть!", "Регистрация", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                    MessageBox.Show("Такой пользователь уже есть!", "Регистрация", MessageBoxButtons.OK, MessageBoxIcon.Error);                    
                     sqlDataReader.Close();
                 }
             }
@@ -81,14 +83,17 @@ namespace Note
 
                 SqlDataReader sqlDataReader34 = command3.ExecuteReader();
 
-                // UserId = Convert.ToInt32(sqlDataReader34["Id"]);
+               
                 if (!sqlDataReader34.HasRows) MessageBox.Show("Неверный Пользователь", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 if (sqlDataReader34.Read())
                 {
+                    UserId = Convert.ToInt32(sqlDataReader34["Id"]);
                     if (Convert.ToString(sqlDataReader34["Password"]) == textBox2.Text)
                     {
                         sqlDataReader34.Close();
+                       
                         login = true;
+                        UserName = textBox1.Text;
                         sqlConnection.Close();
                         Close();
                     }
@@ -107,7 +112,7 @@ namespace Note
 
         }
 
-        private void LoginForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void LoginForm_FormClosing(object sender, FormClosingEventArgs e) 
         {
             if (!login)
             {
