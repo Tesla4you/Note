@@ -21,7 +21,7 @@ namespace Note
             InitializeComponent();
             var directory = System.IO.Directory.GetCurrentDirectory();
             var connectionstring = @"Data Source=(localdb)\mssqllocaldb;AttachDbFilename=" + directory + @"\NoteDataBase.mdf;Integrated Security=True;Connect Timeout=30;";
-            // string connectionstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\source\repos\Note\Note\NoteDataBase.mdf;Integrated Security=True";
+            //string connectionstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\source\repos\Note\Note\NoteDataBase.mdf;Integrated Security=True";
             sqlConnection = new SqlConnection(connectionstring);
         }        
 
@@ -41,6 +41,7 @@ namespace Note
                 command1.Parameters.AddWithValue("UserName", textBox1.Text.ToLowerInvariant());
 
                 SqlDataReader sqlDataReader = command1.ExecuteReader();
+                sqlDataReader.Close();
 
                 if (!sqlDataReader.HasRows)
                 {
@@ -88,6 +89,7 @@ namespace Note
                     {
                         sqlDataReader34.Close();
                         login = true;
+                        sqlConnection.Close();
                         Close();
                     }
                     else
