@@ -19,7 +19,9 @@ namespace Note
         public  LoginForm()
         {
             InitializeComponent();
-            string connectionstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\source\repos\Note\DatabaseNote.mdf;Integrated Security=True";
+            var directory = System.IO.Directory.GetCurrentDirectory();
+            var connectionstring = @"Data Source=(localdb)\mssqllocaldb;AttachDbFilename=" + directory + @"\NoteDataBase.mdf;Integrated Security=True;Connect Timeout=30;";
+            // string connectionstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\source\repos\Note\Note\NoteDataBase.mdf;Integrated Security=True";
             sqlConnection = new SqlConnection(connectionstring);
         }        
 
