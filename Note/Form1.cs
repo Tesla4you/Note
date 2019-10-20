@@ -204,6 +204,14 @@ namespace Note
             label5.Text = "";
             MessageBox.Show("Заметка создана");
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e) // ПРИ ЗАКРЫТИИ ЗАМЕТКИ
+        {
+            if (sqlConnection !=null && sqlConnection.State != ConnectionState.Closed)
+            {
+                sqlConnection.Close();
+            }
+        }
     }
    
 }
