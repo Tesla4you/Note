@@ -43,7 +43,7 @@ namespace Note
 
                 command1.Parameters.AddWithValue("UserName", textBox1.Text.ToLowerInvariant());
 
-                SqlDataReader sqlDataReader = command1.ExecuteReader();
+                SqlDataReader sqlDataReader =  command1.ExecuteReader();
                 sqlDataReader.Close();
 
                 if (!sqlDataReader.HasRows)

@@ -54,14 +54,25 @@ namespace Note
 
             SqlCommand command1 = new SqlCommand("SELECT  [Title] FROM [Note] ", sqlConnection);
 
-            sqlDataReader = await command1.ExecuteReaderAsync();
-
-            while (await sqlDataReader.ReadAsync())
+            try
             {
-                listBox1.Items.Add(Convert.ToString(sqlDataReader["Title"]));
-            }
+                sqlDataReader = await command1.ExecuteReaderAsync();
 
-            sqlDataReader.Close();
+                while (await sqlDataReader.ReadAsync())
+                {
+                    listBox1.Items.Add(Convert.ToString(sqlDataReader["Title"]));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, ex.Source,MessageBoxButtons.OK, MessageBoxIcon.Error);                
+            }
+            finally
+            {
+                if (sqlDataReader != null)
+                sqlDataReader.Close();
+            }
         }
 
 
@@ -71,39 +82,45 @@ namespace Note
             textBox2.Visible = true;           
             SqlDataReader sqlDataReader = null;
 
-            if (listBox1.SelectedItem != null) // tut
+            if (listBox1.SelectedItem != null) 
             {
                 string curItem = listBox1.SelectedItem.ToString();
 
                 SqlCommand command35 = new SqlCommand("SELECT  [Text], [UserId], [NoteId] FROM [Note] WHERE Title LIKE @Title", sqlConnection);
 
                 command35.Parameters.AddWithValue("Title", curItem);
-
-                sqlDataReader = await command35.ExecuteReaderAsync();
-
-                if (sqlDataReader.Read())
+                try
                 {
-                    textBox1.Text = sqlDataReader["Text"].ToString();
-                    textBox2.Text = curItem;
-                    noteuserid = Convert.ToInt32(sqlDataReader["UserId"]);
-                    noteid = Convert.ToInt32(sqlDataReader["NoteId"]);
+                    sqlDataReader = await command35.ExecuteReaderAsync();
 
-                    if (noteuserid == userid)
+                    if (sqlDataReader.Read())
                     {
-                        button1.Visible = true;
-                        button2.Visible = true;
-                        label2.Visible = true;
-                    }
-                    else
-                    {
-                        button1.Visible = false;
-                        button2.Visible = false;
-                        label2.Visible = false;
+                        textBox1.Text = sqlDataReader["Text"].ToString();
+                        textBox2.Text = curItem;
+                        noteuserid = Convert.ToInt32(sqlDataReader["UserId"]);
+                        noteid = Convert.ToInt32(sqlDataReader["NoteId"]);
+
+                        if (noteuserid == userid)
+                        {
+                            button1.Visible = true;
+                            button2.Visible = true;
+                            label2.Visible = true;
+                        }
+                        else
+                        {
+                            button1.Visible = false;
+                            button2.Visible = false;
+                            label2.Visible = false;
+                        }
                     }
                 }
-
-                if (sqlDataReader != null)
+                catch (Exception ex)
                 {
+                    MessageBox.Show(ex.Message, ex.Source, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    if( sqlDataReader!=null )
                     sqlDataReader.Close();
                 }
             }
@@ -120,29 +137,39 @@ namespace Note
                 SqlDataReader sqlDataReader = null;
                 SqlCommand commandupsel = new SqlCommand("SELECT  [Title] FROM [Note] WHERE [Noteid] = @Noteid", sqlConnection);
                 commandupsel.Parameters.AddWithValue("Noteid", noteid);
-                sqlDataReader = await commandupsel.ExecuteReaderAsync();
-                string title;
-                if (sqlDataReader.Read())
+                try
                 {
-                    title = sqlDataReader["Title"].ToString();
-                    sqlDataReader.Close();
+                    sqlDataReader = await commandupsel.ExecuteReaderAsync();
+                    string title;
+                    if (sqlDataReader.Read())
+                    {
+                        title = sqlDataReader["Title"].ToString();
+                        sqlDataReader.Close();
 
-                    if (!listBox1.Items.Contains(textBox2.Text) || textBox2.Text == title)
-                    {
-                        SqlCommand commandup = new SqlCommand("UPDATE [Note] SET [UserId] =@UserId, [Title] = @Title, [Text]=@Text WHERE [NoteId] = @NoteId", sqlConnection);
-                        commandup.Parameters.AddWithValue("UserId", userid);
-                        commandup.Parameters.AddWithValue("Title", textBox2.Text);
-                        commandup.Parameters.AddWithValue("Text", textBox1.Text);
-                        commandup.Parameters.AddWithValue("NoteId", noteid);
-                        await commandup.ExecuteNonQueryAsync();
-                        refresh();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Такая заметка уже существует");
+                        if (!listBox1.Items.Contains(textBox2.Text) || textBox2.Text == title)
+                        {
+                            SqlCommand commandup = new SqlCommand("UPDATE [Note] SET [UserId] =@UserId, [Title] = @Title, [Text]=@Text WHERE [NoteId] = @NoteId", sqlConnection);
+                            commandup.Parameters.AddWithValue("UserId", userid);
+                            commandup.Parameters.AddWithValue("Title", textBox2.Text);
+                            commandup.Parameters.AddWithValue("Text", textBox1.Text);
+                            commandup.Parameters.AddWithValue("NoteId", noteid);
+                            await commandup.ExecuteNonQueryAsync();
+                            refresh();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Такая заметка уже существует");
+                        }
                     }
                 }
-                sqlDataReader.Close();
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, ex.Source, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    sqlDataReader.Close();
+                }               
             }
         }
 
