@@ -28,9 +28,9 @@ namespace Note
             sqlConnection = new SqlConnection(connectionstring);
         }        
 
-        private async void LoginForm_Load(object sender, EventArgs e)
+        private  void LoginForm_Load(object sender, EventArgs e)
         {
-            await sqlConnection.OpenAsync();
+            sqlConnection.OpenAsync();
         }
 
        
@@ -44,7 +44,6 @@ namespace Note
                 command1.Parameters.AddWithValue("UserName", textBox1.Text.ToLowerInvariant());
 
                 SqlDataReader sqlDataReader =  command1.ExecuteReader();
-                //sqlDataReader.Close();
 
                 if (!sqlDataReader.HasRows)
                 {
@@ -66,6 +65,7 @@ namespace Note
                     MessageBox.Show("Такой пользователь уже есть!", "Регистрация", MessageBoxButtons.OK, MessageBoxIcon.Error);                    
                     sqlDataReader.Close();
                 }
+                sqlDataReader.Close();
             }
 
             else
@@ -81,16 +81,16 @@ namespace Note
 
                 command3.Parameters.AddWithValue("UserName", textBox1.Text.ToLowerInvariant());
 
-                SqlDataReader sqlDataReader34 = command3.ExecuteReader();
+                SqlDataReader sqlDataReader = command3.ExecuteReader();
 
                
-                if (!sqlDataReader34.HasRows) MessageBox.Show("Неверный Пользователь", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (sqlDataReader34.Read())
+                if (!sqlDataReader.HasRows) MessageBox.Show("Неверный Пользователь", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (sqlDataReader.Read())
                 {
-                    UserId = Convert.ToInt32(sqlDataReader34["Id"]);
-                    if (Convert.ToString(sqlDataReader34["Password"]) == textBox2.Text)
+                    UserId = Convert.ToInt32(sqlDataReader["Id"]);
+                    if (Convert.ToString(sqlDataReader["Password"]) == textBox2.Text)
                     {
-                        sqlDataReader34.Close();
+                        sqlDataReader.Close();
                        
                         login = true;
                         UserName = textBox1.Text;
@@ -101,24 +101,26 @@ namespace Note
                     {
                         MessageBox.Show("Неверный пароль", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        sqlDataReader34.Close();
+                        sqlDataReader.Close();
                     }
                 }
+                sqlDataReader.Close();
             }
             else
             {
                 MessageBox.Show("Неправильно заполнены поля", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                              
             }
 
         }
 
         private void LoginForm_FormClosing(object sender, FormClosingEventArgs e) 
         {
+            sqlConnection.Close();
             if (!login)
             {
                 Application.Exit();
             }
-            sqlConnection.Close();
         }
     }
 

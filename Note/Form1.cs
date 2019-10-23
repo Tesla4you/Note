@@ -86,12 +86,12 @@ namespace Note
             {
                 string curItem = listBox1.SelectedItem.ToString();
 
-                SqlCommand command35 = new SqlCommand("SELECT  [Text], [UserId], [NoteId] FROM [Note] WHERE Title LIKE @Title", sqlConnection);
+                SqlCommand command = new SqlCommand("SELECT  [Text], [UserId], [NoteId] FROM [Note] WHERE Title LIKE @Title", sqlConnection);
 
-                command35.Parameters.AddWithValue("Title", curItem);
+                command.Parameters.AddWithValue("Title", curItem);
                 try
                 {
-                    sqlDataReader = await command35.ExecuteReaderAsync();
+                    sqlDataReader = await command.ExecuteReaderAsync();
 
                     if (sqlDataReader.Read())
                     {
@@ -135,11 +135,11 @@ namespace Note
             else
             {
                 SqlDataReader sqlDataReader = null;
-                SqlCommand commandupsel = new SqlCommand("SELECT  [Title] FROM [Note] WHERE [Noteid] = @Noteid", sqlConnection);
-                commandupsel.Parameters.AddWithValue("Noteid", noteid);
+                SqlCommand command = new SqlCommand("SELECT  [Title] FROM [Note] WHERE [Noteid] = @Noteid", sqlConnection);
+                command.Parameters.AddWithValue("Noteid", noteid);
                 try
                 {
-                    sqlDataReader = await commandupsel.ExecuteReaderAsync();
+                    sqlDataReader = await command.ExecuteReaderAsync();
                     string title;
                     if (sqlDataReader.Read())
                     {
@@ -175,9 +175,9 @@ namespace Note
 
         private async void button2_Click(object sender, EventArgs e) // КНОПКА УДАЛИТЬ
         {
-            SqlCommand commanddel = new SqlCommand("DELETE FROM [NOTE] WHERE [Noteid] = @Noteid", sqlConnection);
-            commanddel.Parameters.AddWithValue("NoteId", noteid);
-            await commanddel.ExecuteNonQueryAsync();
+            SqlCommand command = new SqlCommand("DELETE FROM [NOTE] WHERE [Noteid] = @Noteid", sqlConnection);
+            command.Parameters.AddWithValue("NoteId", noteid);
+            await command.ExecuteNonQueryAsync();
             refresh();
             textBox1.Visible = false;
             textBox2.Visible = false;
@@ -195,11 +195,11 @@ namespace Note
             {
                 textBox2.Text = "Пожалуйста переименуйте заголовок";
             }
-            SqlCommand commandnew = new SqlCommand("INSERT INTO [Note] (UserId, Title, Text) VALUES(@UserId,@Title, @Text)", sqlConnection);
-            commandnew.Parameters.AddWithValue("UserId", userid);
-            commandnew.Parameters.AddWithValue("Title", textBox2.Text);
-            commandnew.Parameters.AddWithValue("Text", textBox1.Text);
-            await commandnew.ExecuteNonQueryAsync();
+            SqlCommand command = new SqlCommand("INSERT INTO [Note] (UserId, Title, Text) VALUES(@UserId,@Title, @Text)", sqlConnection);
+            command.Parameters.AddWithValue("UserId", userid);
+            command.Parameters.AddWithValue("Title", textBox2.Text);
+            command.Parameters.AddWithValue("Text", textBox1.Text);
+            await command.ExecuteNonQueryAsync();
             refresh();
             label5.Text = "";
             MessageBox.Show("Заметка создана");
