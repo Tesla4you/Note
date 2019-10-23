@@ -82,27 +82,30 @@ namespace Note
                 command3.Parameters.AddWithValue("UserName", textBox1.Text.ToLowerInvariant());
 
                 SqlDataReader sqlDataReader = command3.ExecuteReader();
-
-               
-                if (!sqlDataReader.HasRows) MessageBox.Show("Неверный Пользователь", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (sqlDataReader.Read())
+                
+                if (sqlDataReader.HasRows)
                 {
-                    UserId = Convert.ToInt32(sqlDataReader["Id"]);
-                    if (Convert.ToString(sqlDataReader["Password"]) == textBox2.Text)
+                    if (sqlDataReader.Read())
                     {
-                        sqlDataReader.Close();
-                       
-                        login = true;
-                        UserName = textBox1.Text;
-                        sqlConnection.Close();
-                        Close();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Неверный пароль", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        UserId = Convert.ToInt32(sqlDataReader["Id"]);
+                        if (Convert.ToString(sqlDataReader["Password"]) == textBox2.Text)
+                        {
+                            sqlDataReader.Close();
 
-                        sqlDataReader.Close();
-                    }
+                            login = true;
+                            UserName = textBox1.Text;
+                            sqlConnection.Close();
+                            Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Неверный пароль", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }                    
+                }
+                else
+                {
+                  MessageBox.Show("Неверный Пользователь", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 sqlDataReader.Close();
             }
